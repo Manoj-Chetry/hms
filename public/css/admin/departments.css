@@ -1,0 +1,149 @@
+.upload-form {
+    max-width: 100%;
+    margin: 10px auto;
+    background: #ffffff;
+    padding: 30px 35px;
+    border-radius: 12px;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease-in-out;
+}
+
+.upload-form h2 {
+    margin-bottom: 25px;
+    font-size: 26px;
+    text-align: left;
+    color: #333;
+}
+
+.upload-form label {
+    display: block;
+    margin-bottom: 8px;
+    margin-top: 20px;
+    font-weight: 600;
+    color: #4f4f4f;
+}
+
+.upload-form input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: border 0.3s;
+    background-color: #fafafa;
+}
+
+.upload-form input:focus {
+    border-color: #007bff;
+    outline: none;
+    background-color: #fff;
+}
+
+.btn-container {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.upload-btn {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+.upload-btn:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+.cancel-btn {
+    background-color: #b30000;
+    color: #fff;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.cancel-btn:hover {
+    background-color: #950000;
+    transform: translateY(-2px);
+}
+
+/* Hidden class */
+.hidden {
+    display: none;
+}
+
+/* Table */
+
+.staff-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-family: "Arial", sans-serif;
+}
+
+.staff-table thead {
+    background-color: #007bff;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+.staff-table th,
+.staff-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #f2f2f2;
+}
+
+.staff-table tbody tr:nth-child(odd) {
+    background-color: #f9f9f9;
+}
+
+.staff-table tbody tr:nth-child(even) {
+    background-color: #ffffff;
+}
+
+.staff-table tbody tr:hover {
+    background-color: #f1f1f1;
+    cursor: pointer;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.action-buttons button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.edit-btn {
+    background-color: #28a745;
+    color: #fff;
+}
+
+.edit-btn:hover {
+    background-color: #218838;
+}
+
+.delete-btn {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.delete-btn:hover {
+    background-color: #c82333;
+}

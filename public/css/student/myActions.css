@@ -1,0 +1,68 @@
+/* Actions Table */
+.complaints-table-container {
+    max-width: 1100px;
+    margin: 10px auto;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.complaints-table-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+    font-weight: 600;
+}
+
+.complaints-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.complaints-table th,
+.complaints-table td {
+    border: 1px solid #ddd;
+    padding: 12px 15px;
+    text-align: left;
+    font-size: 14px;
+    max-width: 300px;
+}
+
+.complaints-table th {
+    background-color: #8cccef;
+    font-weight: bold;
+    color: #000000;
+}
+
+.complaints-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.status {
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 13px;
+    color: white;
+    display: inline-block;
+    min-width: 75px;
+    text-align: center;
+}
+
+.status.pending {
+    background-color: #ffc107;
+}
+
+.status.resolved {
+    background-color: #28a745;
+}
+
+.status.rejected {
+    background-color: #dc3545;
+}
+
+/* Hidden class */
+.hidden {
+    display: none;
+}

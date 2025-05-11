@@ -1,0 +1,115 @@
+/* Upload Form */
+.upload-form {
+    max-width: 100%;
+    margin: 10px auto;
+    background: #ffffff;
+    padding: 30px 35px;
+    border-radius: 12px;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease-in-out;
+}
+
+.upload-form h2 {
+    margin-bottom: 25px;
+    font-size: 26px;
+    text-align: left;
+    color: #333;
+}
+
+.upload-form label {
+    display: block;
+    margin-bottom: 8px;
+    margin-top: 20px;
+    font-weight: 600;
+    color: #4f4f4f;
+}
+
+.upload-form textarea,
+.upload-form input[type="datetime-local"],
+.upload-form input[type="date"] {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: border 0.3s;
+    background-color: #fafafa;
+}
+
+.upload-form textarea:focus,
+.upload-form input[type="datetime-local"]:focus,
+.upload-form input[type="date"]:focus {
+    border-color: #007bff;
+    outline: none;
+    background-color: #fff;
+}
+
+.upload-form textarea {
+    resize: none;
+    min-height: 100px;
+}
+
+.btn-container {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.upload-btn {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+.upload-btn:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+.cancel-btn {
+    background-color: #b30000;
+    color: #fff;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.cancel-btn:hover {
+    background-color: #950000;
+    transform: translateY(-2px);
+}
+
+/* Hidden class */
+.hidden {
+    display: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .dashboard-container {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        display: flex;
+        justify-content: space-around;
+    }
+
+    .sidebar nav {
+        display: flex;
+        gap: 20px;
+    }
+
+    .main {
+        width: 100%;
+    }
+}
