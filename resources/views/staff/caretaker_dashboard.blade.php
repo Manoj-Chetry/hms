@@ -18,6 +18,7 @@
                     <a href="{{route('staff.caretaker.dashboard')}}">Home</a>
                     <a href="{{route("staff.caretaker.student_details")}}">Student Details</a>
                     <a href="{{route('staff.caretaker.room_details')}}">Room Details</a>
+                    <a href="{{route('staff.caretaker.view.general_complaints')}}">General Complaints</a>
                 </nav>
             </aside>
     
@@ -48,7 +49,14 @@
                         </ul>
                     @endif
 
-
+                    <div class="roles-info">
+                        @foreach ($roles as $role)
+                            <div class="role-item">
+                                <span class="label">{{$role->role}}</span>
+                                <span class="value">{{$role->name}}</span>
+                            </div>
+                        @endforeach
+                    </div>
 
     
                 </section>

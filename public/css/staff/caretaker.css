@@ -1,0 +1,32 @@
+.roles-info {
+    max-width: 1100px;
+    margin: 10px auto;
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.role-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 16px;
+    margin-bottom: 10px;
+    background-color: #f7f9fc;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+}
+
+.role-item:hover {
+    background-color: #eef2f7;
+}
+
+.role-item .label {
+    font-weight: 500;
+    color: #555;
+}
+
+.role-item .value {
+    font-weight: 600;
+    color: #222;
+}

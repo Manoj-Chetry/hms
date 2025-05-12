@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-
+use App\Models\Complaint;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -148,6 +148,38 @@ class CaretakerController extends Controller
             return redirect()->back()->with('success', 'Rooms Created: ' . implode(', ', $created) . '<br>Failed to create: ' . implode(', ', $exist));
         }
     }
+
+
+    public function viewGeneralComplaints(){
+        $user = auth('staff')->user();
+        $complaints = Complaint::where('hostel_id', $user->hostel_id)
+                                ->where('type','general')
+                                ->where('status','pending')
+                                ->orderBy('created_at', 'desc')
+                                ->get();
+
+        return view('staff.caretaker.general_complaint', compact('complaints'));
+    }
+    public function viewRaggingComplaints(){
+        $user = auth('staff')->user();
+        $complaints = Complaint::where('hostel_id', $user->hostel_id)
+                                ->where('type','raggging')
+                                ->where('status','pending')
+                                ->orderBy('created_at', 'desc')
+                                ->get();
+
+        return view('staff.caretaker.general_complaint', compact('complaints'));
+    }
+
+    public function resolveComplaint($id){
+        $complaint = Complaint::find($id);
+        $complaint->status = 'resolved';
+        $complaint->resolved_at = date('Y-m-d');
+        $complaint->save();
+
+        return redirect()->route('staff.caretaker.view.general_complaints')->with('success', 'Complaint marked as resolved.');
+    }
     
 }
+
 

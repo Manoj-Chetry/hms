@@ -14,7 +14,7 @@
             <aside class="sidebar">
                 <h2>warden</h2>
                 <nav> 
-                    <a href="#">Student Details</a>
+                    <a href="{{route('staff.warden.dashboard')}}">Home</a>
                     <a href="#">Room Details</a>
                     <a href="#">Manage Roles</a>
                     <a href="#">Manage Complaints</a>
@@ -51,7 +51,7 @@
                     @endif
 
                     <div class="table-container">
-                        <form method="GET" action="{{ route('staff.students.index') }}">
+                        <form class="search" method="GET" action="{{ route('staff.students.index') }}">
                             <input type="text" name="search" placeholder="Search students..." value="{{ request('search') }}">
                             <button type="submit">Search</button>
                         </form>
@@ -61,9 +61,9 @@
                                     <th>Name</th>
                                     <th>Roll Number</th>
                                     <th>Department</th>
-                                    <th>Email</th>
                                     <th>Phone</th>
                                     <th>Seat</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -75,9 +75,11 @@
                                             <td>{{$student->name}}</td>
                                             <td>{{$student->roll_number}}</td>
                                             <td>{{$student->department}}</td>
-                                            <td>{{$student->email}}</td>
                                             <td>{{$student->phone}}</td>
                                             <td>{{$student->seat}}</td>
+                                            <td>
+                                                <button onclick="openModal(this)" data-roll="{{$student->roll_number}}" class="edit-btn">Assign Role</button>
+                                            </td>
                                         </tr>
                                     @endforeach
                                 @endif
@@ -86,9 +88,47 @@
                         </table>
                     </div>
 
+                    <!-- Modal Structure -->
+                    <div class="modal" id="assignRoleModal">
+                        <div class="modal-content">
+                        <h2>Assign Role</h2>
+                        <form action="{{route('staff.warden.assignRole')}}" method="post">
+                            @csrf
+                            <input type="hidden" id="studentRoll" name="roll_number">
+
+                            <label for="roleSelect">Select Role</label>
+                            <select id="roleSelect" name="role">
+                                <option value="Prefect">Prefect</option>
+                                <option value="Assistant Prefect">Assistant Prefect</option>
+                                <option value="Mess Conveynor">Mess Conveynor</option>
+                            </select>
+                            <div class="modal-buttons">
+                                <button type="button" class="cancel-btn" onclick="closeModal()">Cancel</button>
+                                <button type="submit" class="assign-btn">Assign</button>
+                            </div>
+                        </form>
+                        </div>
+                    </div>
+  
+
     
                 </section>
             </main>
         </div>
+
+        <script>
+
+            function openModal(button) {
+              const roll = button.getAttribute('data-roll');
+              document.getElementById("studentRoll").value = roll;
+              document.getElementById("assignRoleModal").style.display = "block";
+            }
+          
+            // Close the modal (add this to the "Cancel" button)
+            function closeModal() {
+              document.getElementById("assignRoleModal").style.display = "none";
+            }
+          </script>
+          
     </body>
 </html>

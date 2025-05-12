@@ -71,22 +71,12 @@
                     </div>
 
                     <div class="roles-info">
-                        <div class="role-item">
-                            <span class="label">Prefect</span>
-                            <span class="value">Prefect</span>
-                        </div>
-                        <div class="role-item">
-                            <span class="label">Assistant Prefect</span>
-                            <span class="value">Abc</span>
-                        </div>
-                        <div class="role-item">
-                            <span class="label">Mess Conveynor</span>
-                            <span class="value">Abc</span>
-                        </div>
-                        <div class="role-item">
-                            <span class="label">Mess Manager</span>
-                            <span class="value">Abc</span>
-                        </div>
+                        @foreach ($roles as $role)
+                            <div class="role-item">
+                                <span class="label">{{$role->role}}</span>
+                                <span class="value">{{$role->name}}</span>
+                            </div>
+                        @endforeach
                     </div>
                 </section>
             </main>

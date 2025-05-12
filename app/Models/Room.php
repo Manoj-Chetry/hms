@@ -11,4 +11,9 @@ class Room extends Model
     public $timestamps = false;
 
     protected $fillable = ['id','capacity','room_number','hostel_id'];
+    public function hostel()
+    {
+        return $this->belongsTo(Hostel::class);
+    }
 }
+

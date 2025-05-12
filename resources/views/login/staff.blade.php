@@ -3,10 +3,10 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="{{URL::asset('css/header.css')}}">
-        <link rel="stylesheet" href="
-        {{URL::asset('css/login.css')}}">
         <title>Hostel Management System</title>
+        <link rel="stylesheet" href="{{URL::asset('css/header.css')}}">
+        <link rel="stylesheet" href="{{URL::asset('css/login.css')}}">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
     </head>
     <body>
@@ -14,7 +14,8 @@
        <header>
             <img src="https://www.tezu.ernet.in/images/tulogo.png" alt="tezu_logo">
             <h1>Hostel Management System</h1>
-            <a href="{{route('welcome')}}">Back</a>
+            <p>Tezpur University</p>
+            <a class="back-btn" href="{{route('welcome')}}">Back</a>
        </header>
        
        <div class="container">

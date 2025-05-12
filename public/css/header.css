@@ -4,30 +4,26 @@
     box-sizing: border-box;
 }
 
-body,
-html {
-    height: 100%;
-    width: 100%;
-    font-family: "Poppins", sans-serif;
-}
-
 header {
-    display: flex;
-    height: 70px;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    padding: 5px 10px;
-    align-items: center;
-    justify-content: space-between;
-    color: white;
+    text-align: center;
+    padding: 30px 20px 10px;
+    background-color: #ffffffcc;
+    width: 100%;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
-header > img {
-    width: 50px;
+header img {
+    height: 80px;
+    margin-bottom: 10px;
 }
 
-header > a {
-    text-decoration: none;
-    padding: 4px 10px;
-    background-color: red;
-    color: white;
+header h1 {
+    font-size: 2rem;
+    color: #2e7d32;
+    font-weight: 700;
+}
+
+header p {
+    color: #555;
+    font-size: 1rem;
 }

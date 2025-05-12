@@ -8,6 +8,7 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\WardenController;
 use App\Http\Controllers\PasswordResetController;
 use App\Models\Department;
+use App\Models\Role;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Hostel;
@@ -147,10 +148,11 @@ Route::middleware(['session_expiry'])->group(function(){
             
             // Caretaker Dashboard
             Route::get('caretaker/dashboard', function() {
-                $caretaker = auth('staff')->user(); // Get the logged-in caretaker
-                $hostel = Hostel::find($caretaker->hostel_id); // Fetch the hostel associated with the caretaker
-                
-                return view('staff.caretaker_dashboard', compact('hostel'));
+                $caretaker = auth('staff')->user(); 
+                $hostel = Hostel::find($caretaker->hostel_id); 
+                $roles = Role::where('hostel_id', $caretaker->hostel_id)->get();
+
+                return view('staff.caretaker_dashboard', compact('hostel', 'roles'));
             })->name('caretaker.dashboard');
             
             // Attender Dashboard
@@ -192,6 +194,11 @@ Route::middleware(['session_expiry'])->group(function(){
             Route::post('/caretaker/add_single_room', [CaretakerController::class, 'addSingleRoom'])->name('caretaker.add_single_room');
             Route::post('/caretaker/add_multiple_room', [CaretakerController::class, 'addMultipleRoom'])->name('caretaker.add_multiple_room');
 
+            // View General Complaints : Caretaker
+            Route::get('/caretaker/view_general_complaints', [CaretakerController::class,'viewGeneralComplaints'])->name('caretaker.view.general_complaints');
+            // Resolve complaint
+            Route::post('/caretaker/complaint_resolve/{id}', [CaretakerController::class, 'resolveComplaint'])->name('caretaker.complaint.resolve');
+
 
             // hostel view: dsw
             Route::get('dsw/hostel/{name}', [DswController::class, 'viewHostel'])->name('dsw.hostel');
@@ -200,6 +207,9 @@ Route::middleware(['session_expiry'])->group(function(){
             // Student Details : warden
             Route::get('/warden/student_details', [WardenController::class, 'studentDetails'])->name("warden.student_details");
             Route::get('warden/student_search', [WardenController::class, 'studentSearch'])->name('students.index');
+
+            // Role assign : warden
+            Route::post('warden/assign_role', [WardenController::class, 'assignRole'])->name('warden.assignRole');
         });
     });
 

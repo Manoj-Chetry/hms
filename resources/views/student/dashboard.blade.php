@@ -58,8 +58,6 @@
                             <label for="issue_description">Issue Description</label>
                             <textarea id="issue_description" name="issue_description" required></textarea>
                     
-                            <label for="created_at">Date</label>
-                            <input type="date" id="created_at" name="created_at" required>
                     
                             <div class="btn-container">
                                 <button type="submit" class="upload-btn">Lodge Complaint</button>
@@ -74,9 +72,6 @@
                             @csrf
                             <label for="issue_description">Issue Description</label>
                             <textarea id="issue_description" name="issue_description" required></textarea>
-                    
-                            <label for="created_at">Date</label>
-                            <input type="date" id="created_at" name="created_at" required>
                     
                             <div class="btn-container">
                                 <button type="submit" class="upload-btn">Lodge Complaint</button>

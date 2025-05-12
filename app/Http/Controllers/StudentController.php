@@ -9,7 +9,7 @@ use App\Models\Hostel;
 use App\Models\Leave;
 use App\Models\Room;
 use App\Models\Seat;
-use Illuminate\Support\Facades\Schema;
+
 
 class StudentController extends Controller
 {
@@ -46,7 +46,7 @@ class StudentController extends Controller
             'hostel_id' => $hostel['id'],
             'issue_description' =>  $request->issue_description,
             'status' => 'pending',
-            'created_at' => $request->created_at,
+            'created_at' => date('Y-m-d'),
             'resolved_at' => Null,
             'type' => 'general'
         ];
@@ -75,7 +75,7 @@ class StudentController extends Controller
             'hostel_id' => $hostel['id'],
             'issue_description' =>  $request->issue_description,
             'status' => 'pending',
-            'created_at' => $request->created_at,
+            'created_at' => date('Y-m-d'),
             'resolved_at' => Null,
             'type' => 'ragging'
         ];
