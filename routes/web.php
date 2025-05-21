@@ -168,7 +168,6 @@ Route::middleware(['session_expiry'])->group(function(){
                 Route::get('dsw/hostel/{name}', [DswController::class, 'viewHostel'])->name('dsw.hostel');
 
                 Route::post('dsw/hostelChange/forward/{id}',[DswController::class, 'hostelForward'])->name('dsw.hostel.forward');
-                Route::post('dsw/hostelChange/approve/{id}',[DswController::class, 'hostelApprove'])->name('dsw.hostel.approve');
                 Route::post('dsw/hostelChange/reject/{id}',[DswController::class, 'hostelReject'])->name('dsw.hostel.reject');
             });
 

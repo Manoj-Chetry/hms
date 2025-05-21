@@ -25,7 +25,7 @@ class StudentController extends Controller
 
         $hostels = [];
         foreach($hos as $h){
-            if($h->id == $hostel->id){
+            if($h->id == $hostel->id || $user->gender != $h->gender){
                 continue;
             }
             else{

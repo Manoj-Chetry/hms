@@ -12,19 +12,18 @@ use App\Models\Hostel;
 class DswController extends Controller
 {
     public function viewDashboard(){
-        $hostelChange = Hostel_Change::whereNot('status', 'rejected')->get();
+        $hostelChange = Hostel_Change::where('status', 'forwarded')->get();
         $hostels = Hostel::all();
         return view('staff.dsw_dashboard', compact('hostels', 'hostelChange'));
     }
 
     public function hostelForward(Request $request){
         $hosCh = Hostel_Change::where('id', $request->id)->first();
-        $hosCh->status = 'forwarded';
+        $hosCh->status = 'forwarded:dsw';
         $hosCh->save();
 
         return redirect()->route('staff.dsw.dashboard');
     }
-    public function hostelApprove(){}
     public function hostelReject(Request $request){
         $hosCh = Hostel_Change::where('id', $request->id)->first();
         $hosCh->status = 'rejected';

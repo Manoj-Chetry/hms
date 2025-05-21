@@ -174,14 +174,18 @@ class WardenController extends Controller
         $hos = Hostel_Change::where('id', $request->id)->first();
         $s = Seat::where('id', $request->seat)->first();
         $student = Student::where('roll_number', $hos->student_id)->first();
+        $olds = Seat::find($student->seat_id);
 
-        DB::transaction(function() use($hos, $s, $student){
+
+        DB::transaction(function() use($hos, $s, $student, $olds){
             $hos->new_seat_id = $s->id;
             $hos->status = 'accepted';
             $hos->save();
 
             $s->occupied = true;
             $s->save();
+            $olds->occupied= false;
+            $olds->save();
 
             $student->seat_id = $s->id;
             $student->seat = $s->seat;

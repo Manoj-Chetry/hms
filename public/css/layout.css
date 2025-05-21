@@ -13,7 +13,14 @@
     padding: 20px;
 }
 
-.sidebar > h2 {
+.sidebar > a > h2 {
+    margin-bottom: 30px;
+    font-size: 24px;
+    color: #00c2ff;
+    text-decoration: none;
+}
+
+.sidebar > a {
     margin-bottom: 30px;
     font-size: 24px;
     color: #00c2ff;

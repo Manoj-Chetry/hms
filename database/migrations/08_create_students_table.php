@@ -15,6 +15,7 @@ return new class extends Migration
             $table->string('department');
             $table->unsignedBigInteger('department_id');
             $table->string('email')->unique();
+            $table->string('gender');
             $table->string('phone');
             $table->string('seat');
             $table->unsignedBigInteger('seat_id')->unique();

@@ -20,6 +20,7 @@ class Student extends Authenticatable
         'phone',
         'seat_id',
         'seat',
+        'gender',
         'password',
     ];
 

@@ -12,12 +12,12 @@
         <div class="dashboard-container">
             <!-- Sidebar -->
             <aside class="sidebar">
-                <a href="#">
+                <a href="#" onclick="toggleProfile()">
                     <h2>Student <br> 
-                    @if($isMessConveynor)
-                    Mess Conveynor
-                    @endif   
-                </h2>
+                        @if($isMessConveynor)
+                        Mess Conveynor
+                        @endif   
+                    </h2>
                 </a>
                 <nav>
                     @if ($isMessConveynor)
@@ -43,7 +43,7 @@
                 <!-- Top Bar -->
                 <header class="topbar">
                     <div class="greeting">Welcome, Student</div>
-                    <form action="{{ route('admin.logout') }}" method="POST">
+                    <form action="{{ route('student.logout') }}" method="POST">
                         @csrf
                         <button type="submit" class="logout-btn">Logout</button>
                     </form>
@@ -64,7 +64,7 @@
                         </ul>
                     @endif
 
-                    <div class="profile-container">
+                    <div class="profile-container" id="profile">
                         <div class="profile-card">
                             <div class="profile-header">
                                 <h2 class="student-name">{{$user->name}}</h2>
@@ -165,7 +165,7 @@
                     
                             <div class="btn-container">
                                 <button type="submit" class="upload-btn">Lodge Complaint</button>
-                                <button  class="cancel-btn">Cancel</button>
+                                <button type="button" class="cancel-btn" onclick="handleCancel(this)">Cancel</button>
                             </div>
                         </form>
                     </div>
@@ -179,7 +179,7 @@
                     
                             <div class="btn-container">
                                 <button type="submit" class="upload-btn">Lodge Complaint</button>
-                                <button  class="cancel-btn">Cancel</button>
+                                <button type="button" class="cancel-btn" onclick="handleCancel(this)">Cancel</button>
                             </div>
                         </form>
                     </div>
@@ -198,7 +198,7 @@
                     
                             <div class="btn-container">
                                 <button type="submit" class="upload-btn">Apply</button>
-                                <button  class="cancel-btn">Cancel</button>
+                                <button type="button" class="cancel-btn" onclick="handleCancel(this)">Cancel</button>
                             </div>
                         </form>
                     </div>
@@ -218,7 +218,7 @@
                     
                             <div class="btn-container">
                                 <button type="submit" class="upload-btn">Apply Leave</button>
-                                <button  class="cancel-btn">Cancel</button>
+                                <button type="button" class="cancel-btn" onclick="handleCancel(this)">Cancel</button>
                             </div>
                         </form>
                     </div>
@@ -230,122 +230,63 @@
         </div>
     
         <script>
-            
-            function toggleComplaint(){
-                const complaint = document.getElementById("complaint");
-                const ragging = document.getElementById("ragging");
-                const leave = document.getElementById("leave");
-                const hostel = document.getElementById("hostel");
-                complaint.classList.remove("hidden");
-                ragging.classList.add("hidden");
-                leave.classList.add("hidden");
-                hostel.classList.add("hidden");
-                const expense = document.getElementById("monthlyExpense");
-                const collect = document.getElementById("collectFee");
-                expense.classList.add("hidden");
-                collect.classList.add("hidden");
-            }
-
-            function toggleRagging(){
-                const complaint = document.getElementById("complaint");
-                const ragging = document.getElementById("ragging");
-                const leave = document.getElementById("leave");
-                const hostel = document.getElementById("hostel");
-                ragging.classList.remove("hidden");
-                complaint.classList.add("hidden");
-                leave.classList.add("hidden");
-                hostel.classList.add("hidden");
-        
-                const expense = document.getElementById("monthlyExpense");
-                const collect = document.getElementById("collectFee");
-
-                expense.classList.add("hidden");
-                collect.classList.add("hidden");
-            }
-
-            function toggleLeave(){
-                const complaint = document.getElementById("complaint");
-                const ragging = document.getElementById("ragging");
-                const leave = document.getElementById("leave");
-                const hostel = document.getElementById("hostel");
-                leave.classList.remove("hidden");
-                ragging.classList.add("hidden");
-                complaint.classList.add("hidden");
-                hostel.classList.add("hidden");
-
-                const expense = document.getElementById("monthlyExpense");
-                const collect = document.getElementById("collectFee");
-                expense.classList.add("hidden");
-                collect.classList.add("hidden");
-            }
-
-            function toggleHostel(){
-                const complaint = document.getElementById("complaint");
-                const ragging = document.getElementById("ragging");
-                const leave = document.getElementById("leave");
-                const hostel = document.getElementById("hostel");
-                hostel.classList.remove("hidden");
-                ragging.classList.add("hidden");
-                complaint.classList.add("hidden");
-                leave.classList.add("hidden");
-                const expense = document.getElementById("monthlyExpense");
-                const collect = document.getElementById("collectFee");
-                expense.classList.add("hidden");
-                collect.classList.add("hidden");
-            }
+                function hideAllSections() {
+                    const sections = [
+                        'profile', 'complaint', 'ragging', 'leave', 'hostel',
+                        'monthlyExpense', 'collectFee', 'calculate'
+                    ];
+                    sections.forEach(id => {
+                        const el = document.getElementById(id);
+                        if (el) {
+                            el.classList.add('hidden');
+                            console.log(`Hiding ${id}`);
+                        } else {
+                            console.warn(`Element with id="${id}" not found`);
+                        }
+                    });
+                }
 
 
-            function togglePending(){
-                const expense = document.getElementById("monthlyExpense");
-                const collect = document.getElementById("collectFee");
+                function toggleProfile() {
+                    hideAllSections();
+                    document.getElementById('profile').classList.remove('hidden');
+                }
 
-                expense.classList.add("hidden");
-                collect.classList.add("hidden");
+                function toggleComplaint() {
+                    hideAllSections();
+                    document.getElementById('complaint').classList.remove('hidden');
+                }
 
-                document.getElementById("complaint").classList.add("hidden");
-                document.getElementById("ragging").classList.add("hidden");
-                document.getElementById("leave").classList.add("hidden");
-                document.getElementById("hostel").classList.add("hidden");
-            }
+                function toggleRagging() {
+                    hideAllSections();
+                    document.getElementById('ragging').classList.remove('hidden');
+                }
 
-            function toggleExpense(){
-                const expense = document.getElementById("monthlyExpense");
-                const collect = document.getElementById("collectFee");
+                function toggleLeave() {
+                    hideAllSections();
+                    document.getElementById('leave').classList.remove('hidden');
+                }
 
-                expense.classList.remove("hidden");
-                collect.classList.add("hidden");
+                function toggleHostel() {
+                    hideAllSections();
+                    document.getElementById('hostel').classList.remove('hidden');
+                }
 
-                document.getElementById("complaint").classList.add("hidden");
-                document.getElementById("ragging").classList.add("hidden");
-                document.getElementById("leave").classList.add("hidden");
-                document.getElementById("hostel").classList.add("hidden");
-            }
+                function toggleExpense() {
+                    hideAllSections();
+                    document.getElementById('monthlyExpense').classList.remove('hidden');
+                }
 
-            function toggleDone(){
-                const expense = document.getElementById("monthlyExpense");
-                const collect = document.getElementById("collectFee");
+                function toggleCollect() {
+                    hideAllSections();
+                    document.getElementById('collectFee').classList.remove('hidden');
+                }
 
-                expense.classList.add("hidden");
-                collect.classList.add("hidden");
-
-                document.getElementById("complaint").classList.add("hidden");
-                document.getElementById("ragging").classList.add("hidden");
-                document.getElementById("leave").classList.add("hidden");
-                document.getElementById("hostel").classList.add("hidden");
-            }
-
-            function toggleCollect(){
-                const expense = document.getElementById("monthlyExpense");
-                const collect = document.getElementById("collectFee");
-
-                collect.classList.remove("hidden");
-                expense.classList.add("hidden");
-
-                document.getElementById("complaint").classList.add("hidden");
-                document.getElementById("ragging").classList.add("hidden");
-                document.getElementById("leave").classList.add("hidden");
-                document.getElementById("hostel").classList.add("hidden");
-            }
+                function handleCancel(button) {
+                    const form = button.closest('.upload-form');
+                    if (form) form.classList.add('hidden');
+                    document.getElementById('profile').classList.remove('hidden');
+                }
         </script>
     </body>
-    
+</html>

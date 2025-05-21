@@ -78,7 +78,6 @@
                                     <th>Current Hostel</th>
                                     <th>Requested Hostel</th>
                                     <th>Status</th>
-                                    <th>New Seat</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -92,19 +91,11 @@
                                             <td>{{$l->student->hostel->name}}</td>
                                             <td>{{$l->destinationHostel->name}}</td>
                                             <td>{{$l->status}}</td>
-                                            <td>@if($l->new_seat_id){{$l->new_seat_id}}@else{{'N/A'}}@endif</td>
                                             <td>
-                                                @if($l->new_seat_id!=Null)
-                                                    <form action="{{route('staff.dsw.hostel.approve', $l->id)}}" method="post">
-                                                        @csrf
-                                                        <button type="submit" class="action-btn approve">Approve</button>
-                                                    </form>
-                                                @else
-                                                    <form action="{{route('staff.dsw.hostel.forward', $l->id)}}" method="post">
-                                                        @csrf
-                                                        <button type="submit" class="action-btn approve">Forward</button>
-                                                    </form>
-                                                @endif
+                                                <form action="{{route('staff.dsw.hostel.forward', $l->id)}}" method="post">
+                                                    @csrf
+                                                    <button type="submit" class="action-btn approve">Approve</button>
+                                                </form>
 
                                                 <form action="{{route('staff.dsw.hostel.reject', $l->id)}}" method="post">
                                                     @csrf
