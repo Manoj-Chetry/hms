@@ -25,6 +25,15 @@ class AdminController extends Controller
         }
     }
 
+    public function fetchDept($dept){
+        $d = Department::where('name',$dept)->first();
+        if($d){
+            return $d;
+        }else{
+            return false;
+        }
+    }
+
 
     public function uploadCSV(Request $request)
     {
@@ -60,10 +69,17 @@ class AdminController extends Controller
                 $seat[] = $data[1];
                 continue;
             }
+
+            $d = $this->fetchDept($data[2]);
+            if($d==false){
+                $skip = $data[1];
+            }
+
             $inserted = Student::create([
                 'name' => $data[0],
                 'roll_number' => $data[1],
                 'department' => $data[2],
+                'department_id' => $d['id'],
                 'email' => $data[3],
                 'phone' => $data[4],
                 'seat' => $data[5],
@@ -91,8 +107,8 @@ class AdminController extends Controller
     public function staffFetchAll() {
         $staffs = Staff::all();
         $hostels = Hostel::all();
-    
-        return view('admin.staffs.table', compact('staffs', 'hostels'));
+        $departments = Department::all();
+        return view('admin.staffs.table', compact('staffs', 'hostels', 'departments'));
     }
     
 
@@ -123,54 +139,46 @@ class AdminController extends Controller
    }
 
 
-   public function addStaff(Request $request){
+   public function addStaff(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string',
+            'email' => 'required|email',
+            'role' => 'required|in:dsw,caretaker,attender,hod,warden',
+            'department_id' => 'nullable|min:0',
+            'hostel_id' => 'nullable|min:0'
+        ]);
 
-    $request->validate([
-        'name' => 'required|string',
-        'email' => 'required|email',
-        'role' => 'required|in:dsw,caretaker,attender,hod,warden',
-        'department_id' => 'min:0',
-        'hostel_id' => 'min:0'
-    ]);
+        $staff = Staff::where('email', $request->email)->first();
+        if ($staff) {
+            return redirect()->route("admin.dashboard")
+                ->withErrors(['error'=> 'Staff with this email already exists!'])
+                ->with('showStaff', true);
+        }
 
-    $staff = Staff::where('email', $request->email)->first();
-    if($staff){
-        return redirect()->route("admin.dashboard")
-        ->withErrors(['error'=> 'Staff with this email already exists!'])
-        ->with('showStaff', true);
+        $data = [
+            'name' => $request->name,
+            'email' => $request->email,
+            'role' => $request->role,
+            'department_id' => $request->filled('department_id') ? $request->department_id : null,
+            'hostel_id' => $request->filled('hostel_id') ? $request->hostel_id : null,
+            'password' => '123456'
+        ];
+
+
+        try {
+            Staff::create($data);
+            return redirect()->route('admin.dashboard')
+                ->with('success', 'Staff created successfully!')
+                ->with('showStaff', true);
+        } catch (\Exception $e) {
+            Log::error("Staff creation failed: " . $e->getMessage());
+            return redirect()->route("admin.dashboard")
+                ->withErrors(['error'=> 'Staff creation failed'])
+                ->with('showStaff', true);
+        }
     }
 
-    $data = [
-        'name' => $request->name,
-        'email' => $request->email,
-        'role' =>  $request->role
-    ];
-
-    if(filled($request->department_id)){
-        $data['department_id'] = $request->department_id;
-    }
-    if(filled($request->hostel_id)){
-        $data['hostel_id'] = $request->hostel_id;
-    }
-
-    $data['password'] = "123456";
-
-
-    Log::info("data", $data);
-
-
-    if(!Staff::create($data)){
-        return redirect()->route("admin.dashboard")
-        ->withErrors(['error'=> 'Staff creation failed'])
-        ->with('showStaff', true);
-    }
-    else{
-        return redirect()->route('admin.dashboard')
-        ->with('success', 'Staff created successfully!')
-        ->with('showStaff', true);
-    }
-
-   }
    
 
    public function addDepartment(Request $request){

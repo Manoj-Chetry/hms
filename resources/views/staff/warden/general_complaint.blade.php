@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="{{URL::asset('css/staff/caretaker/complaint.css')}}">
+        <link rel="stylesheet" href="{{URL::asset('css/staff/warden/complaint.css')}}">
         <link rel="stylesheet" href="{{URL::asset('css/layout.css')}}">
         <title>Hostel Management System</title>
 
@@ -12,9 +12,9 @@
         <div class="dashboard-container">
             <!-- Sidebar -->
             <aside class="sidebar">
-                <h2>Caretaker</h2>
+                <h2>Warden</h2>
                 <nav>
-                    <a href="{{route('staff.caretaker.dashboard')}}">Home</a>
+                    <a href="{{route('staff.warden.dashboard')}}">Home</a>
                     <a href="#" onclick="openPending()">Pending Complaints</a>
                     <a href="#" onclick="openResolved()">Resolved Complaints</a>
                 </nav>
@@ -24,7 +24,7 @@
             <main class="main">
                 <!-- Top Bar -->
                 <header class="topbar">
-                    <div class="greeting">Welcome, Caretaker</div>
+                    <div class="greeting">Welcome, Warden</div>
                     <form action="{{route("staff.logout")}}" method="POST">
                         @csrf
                         <button type="submit" class="logout-btn">Logout</button>
@@ -69,7 +69,7 @@
                                             <td>{{ \Illuminate\Support\Str::words($complaint->issue_description, 5, '...') }}</td>
                                             <td>{{$complaint->created_at}}</td>
                                             <td class="action-buttons">
-                                                <form action="{{ route('staff.caretaker.complaint.resolve', $complaint->id) }}" method="POST" onclick="event.stopPropagation();">
+                                                <form action="{{ route('staff.warden.complaint.resolve', $complaint->id) }}" method="POST" onclick="event.stopPropagation();">
                                                     @csrf
                                                     <button type="submit" class="edit-btn">Mark Resolved</button>
                                                 </form>

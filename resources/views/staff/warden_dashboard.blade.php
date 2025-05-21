@@ -13,14 +13,13 @@
         <div class="dashboard-container">
             <!-- Sidebar -->
             <aside class="sidebar">
-                <h2>warden</h2>
+                <h2>Warden</h2>
                 <nav> 
                     <a href="{{route('staff.warden.student_details')}}">Student Details</a>
-                    <a href="#">Room Details</a>
-                    <a href="#">Manage Roles</a>
-                    <a href="#">Manage Complaints</a>
-                    <a href="#">Manage Leaves</a>
-                    <a href="#">Manage Hostel Change</a>
+                    <a href="{{route('staff.warden.view.general_complaints')}}">General Complaints</a>
+                    <a href="{{route('staff.warden.hostel.change')}}">Manage Hostel Changes</a>
+                    <a href="{{route('staff.warden.leaves')}}">Manage Leaves</a>
+
                 </nav>
             </aside>
     
@@ -78,10 +77,14 @@
                             </div>
                         @endforeach
                     </div>
+
+                    
                 </section>
             </main>
         </div>
     
-        
+        <script>
+            
+        </script>
     </body>
     

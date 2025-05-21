@@ -30,7 +30,7 @@ class CaretakerController extends Controller
         $hostel = Hostel::where('id',$hostel_id)->first();
 
         $seats = Seat::where('hostel_id',$hostel_id)->get();
-        $empty_seats = Seat::where('occupied', false)->get();
+        $empty_seats = Seat::where('hostel_id', $hostel_id)->where('occupied', false)->get();
 
 
         return view('staff.caretaker.room_details', compact('hostel', 'seats','empty_seats'));
@@ -158,7 +158,13 @@ class CaretakerController extends Controller
                                 ->orderBy('created_at', 'desc')
                                 ->get();
 
-        return view('staff.caretaker.general_complaint', compact('complaints'));
+        $resolved  = Complaint::where('hostel_id', $user->hostel_id)
+                                ->where('type','general')
+                                ->where('status','resolved')
+                                ->orderBy('created_at', 'desc')
+                                ->get();
+
+        return view('staff.caretaker.general_complaint', compact('complaints', 'resolved'));
     }
     public function viewRaggingComplaints(){
         $user = auth('staff')->user();

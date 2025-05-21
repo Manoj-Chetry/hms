@@ -7,14 +7,17 @@ use Illuminate\Http\Request;
 use App\Models\Complaint;
 use App\Models\Hostel;
 use App\Models\Leave;
+use App\Models\MessExpense;
 use App\Models\Room;
 use App\Models\Seat;
+use App\Models\Role;
 
 
 class StudentController extends Controller
 {
     public function viewDashboard(){
-        $seat_id = auth('student')->user()->seat_id;
+        $user = auth('student')->user();
+        $seat_id = $user->seat_id;
         $seat = Seat::find($seat_id);
         $room = Room::find($seat->room_id);
         $hostel = Hostel::find($room->hostel_id);
@@ -30,8 +33,18 @@ class StudentController extends Controller
             }
         }
 
-        return view('student.dashboard', compact('hostels', 'hostel'));
+        $isMessConveynor = Role::where('roll_number', $user->roll_number)
+                        ->where('role', 'Mess Conveynor')
+                        ->where('hostel_id', $hostel->id)
+                        ->exists();
+
+        $messExpenses = MessExpense::where('hostel_id', $hostel->id)->get();
+
+        return view('student.dashboard', compact('hostels', 'hostel', 'isMessConveynor', 'messExpenses','user'));
+
     }
+
+
     public function makeComplaint(Request $request){
         $rollNumber = auth('student')->user()->roll_number;
 
@@ -55,7 +68,7 @@ class StudentController extends Controller
             ->with('success', 'Complaint Registered Successfully!');
         }
         else{
-            return redirect()->route('')
+            return redirect()->route('student.dashboard')
             ->withErrors('errror', 'Failed to Register Complaint!');
         }
     }
@@ -104,7 +117,8 @@ class StudentController extends Controller
             'reason' => $request->reason,
             'deperature_time' => $request->deperature_time,
             'arrival_time' => $request->arrival_time,
-            'status' => 'pending'
+            'status' => 'pending',
+            'done' => false
         ];
 
         if(Leave::create($data)){
@@ -119,14 +133,12 @@ class StudentController extends Controller
 
     public function hostelChange(Request $request){
         $request->validate([
-            'reason' => 'required',
             'destination_hostel' => 'required'
         ]);
 
         $rollNumber = auth('student')->user()->roll_number;
         $data = [
             'student_id' => $rollNumber,
-            'reason' => $request->reason,
             'destination_hostel_id' => $request->destination_hostel,
             'new_seat_id' => Null,
             'created' => date('Y-m-d'),

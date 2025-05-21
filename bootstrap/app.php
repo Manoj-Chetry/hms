@@ -14,6 +14,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'auth' => \App\Http\Middleware\Authenticate::class,
             'session_expiry' => \App\Http\Middleware\HandleSessionExpiration::class,
+            'staff.role' => \App\Http\Middleware\StaffRoleMiddleware::class,
+            'messconveynor' => \App\Http\Middleware\EnsureMessConveynor::class,
+
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

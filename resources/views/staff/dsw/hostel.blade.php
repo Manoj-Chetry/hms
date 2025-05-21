@@ -16,6 +16,7 @@
                 <nav>
                     
                     <a href="{{route('staff.dsw.dashboard')}}">Home</a>
+                    <a href="#" onclick="toggleVacant()" href="">Vacant Seats</a>
                 </nav>
             </aside>
     
@@ -64,8 +65,23 @@
                             <span class="value">{{ $seats->where('occupied',true)->count() }}</span>
                         </div>
                     </div>
-                    
-    
+                    <br>
+                    <div class="table-containern hidden" id="vacant">
+                        <table>
+                            <thead>
+                                <th>Sl. No.</th>
+                                <th>Seat Name</th>
+                            </thead>
+                            <tbody>
+                                @foreach ($vacant as $i=>$v)
+                                    <tr>
+                                        <td>{{$i+1}}</td>
+                                        <td>{{$v->seat}}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 </section>
                 
             </main>
@@ -73,6 +89,10 @@
     
 
         <script>
+            function toggleVacant(){
+                const vacant = document.getElementById('vacant');
+                vacant.classList.toggle('hidden');
+            }
         </script>
         
     </body>

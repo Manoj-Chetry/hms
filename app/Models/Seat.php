@@ -15,6 +15,9 @@ class Seat extends Model
     public function room() {
         return $this->belongsTo(Room::class);
     }
+    public function hostel() {
+        return $this->belongsTo(Hostel::class);
+    }
 }
 
 

@@ -34,7 +34,6 @@
     
                 <!-- Dashboard Content -->
                 <section class="content">
-                    <h1>Dashboard Overview</h1>
 
                     @if(session('success'))
                         <p style="color:green">{{ session('success') }}</p>

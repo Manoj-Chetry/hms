@@ -12,9 +12,24 @@
         <div class="dashboard-container">
             <!-- Sidebar -->
             <aside class="sidebar">
-                <h2>Student</h2>
+                <a href="#">
+                    <h2>Student <br> 
+                    @if($isMessConveynor)
+                    Mess Conveynor
+                    @endif   
+                </h2>
+                </a>
                 <nav>
-                    
+                    @if ($isMessConveynor)
+                    <p>--Mess Conveynor Section--</p>
+                    <a href="#" onclick="toggleExpense()">Monthly Expense</a>
+                    <a href="{{route('mess.general')}}">General Fee List</a>
+                    <a href="{{route('mess.pending')}}">Pending Dues</a>
+                    <a href="#" onclick="toggleCollect()">Collect Fee</a>
+                    <a href="#">Calculatte Dues</a>
+
+                    <p>--General Student Section--</p>
+                    @endif
                     <a href="#" onclick="toggleComplaint()">Lodge General Complaint</a>
                     <a href="#" onclick="toggleRagging()">Lodge Ragging Complaint</a>
                     <a href="#" onclick="toggleHostel()">Hostel Change Request</a>
@@ -49,6 +64,95 @@
                         </ul>
                     @endif
 
+                    <div class="profile-container">
+                        <div class="profile-card">
+                            <div class="profile-header">
+                                <h2 class="student-name">{{$user->name}}</h2>
+                                <p class="roll-number">Roll Number: {{$user->roll_number}}</p>
+                            </div>
+                            <div class="edit-button-wrapper">
+                                <a href="{{ route('student.profile.edit', '') }}" class="edit-profile-btn">Edit Profile</a>
+                            </div>
+                            <div class="profile-details">
+                                <h3>Contact Details</h3>
+                                <ul>
+                                    <li><strong>Email:</strong> {{$user->email}}</li>
+                                    <li><strong>Phone:</strong> {{$user->phone}}</li>
+                                    <li><strong>Department:</strong> {{$user->department}}</li>
+                                    <li><strong>Room:</strong> {{$user->seat}}</li>
+                                </ul>
+
+                                <h3>Guardian Details</h3>
+                                <ul>
+                                    <li><strong>Name:</strong> Mr. Richard Doe</li>
+                                    <li><strong>Relation:</strong> Father</li>
+                                    <li><strong>Contact:</strong> +91 9123456780</li>
+                                    <li><strong>Email:</strong> richard.doe@example.com</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if ($isMessConveynor)
+                        <div id="monthlyExpense" class="upload-form hidden">
+                            <h2>Enter Monthly Mess Expense</h2>
+                            <form method="post" action="{{route('mess.expense')}}">
+                                @csrf
+                                <label for="totalExpense">Total Monthly Expense (₹):</label>
+                                <input type="number" name="expense" id="totalExpense" class="form-control" required>
+
+                                <label for="startDuration">Start Date of Fee Collection:</label>
+                                <input type="date" name="startDate" id="startDuration" class="form-control" required>
+
+                                <label for="endDuration">End Date of Fee Collection:</label>
+                                <input type="date" name="endDate" id="endDuration" class="form-control" required>
+
+                                <div class="btn-container">
+                                    <button type="submit" class="upload-btn">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div id="collectFee" class="upload-form hidden">
+                            <h2>Collect Mess Fee</h2>
+                            <form id="collectFeeForm" onsubmit="">
+                                <label for="paymentReferenceId">Payment Reference ID:</label>
+                                <input type="text" id="paymentReferenceId" class="form-control" required>
+
+                                <label for="studentName">Student Name:</label>
+                                <input type="text" id="studentName" class="form-control" required>
+
+                                <label for="rollNo">Roll Number:</label>
+                                <input type="text" id="rollNo" class="form-control" required>
+
+                                <label for="amountPaid">Amount Paid (₹):</label>
+                                <input type="number" id="amountPaid" class="form-control" required>
+
+                                <button type="submit" class="upload-btn">Submit Payment</button>
+                            </form>
+                        </div>
+
+                    <div class="calculate">
+                        <form method="POST" class="form" action="{{ route('mess_dues.calculate') }}">
+                            @csrf
+                            <div class="form-group mb-3">
+                                <label for="expense_id">Select Mess Expense Record:</label>
+                                <select name="expense_id" id="expense_id" required>
+                                    @foreach ($messExpenses as $expense)
+                                        <option value="{{ $expense->id }}">
+                                            {{ $expense->starting_date }} to {{ $expense->end_date }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <button class="calc" type="submit">
+                                Calculate Mess Dues
+                            </button>
+                        </form>
+                    </div>
+                    
+                    @endif
                 
 
                     <div id="complaint" class="upload-form hidden">
@@ -84,8 +188,6 @@
                         <h2>Hostel Change Request</h2>
                         <form action="{{route('student.hostelChange')}}" method="POST">
                             @csrf
-                            <label for="reason">Reason</label>
-                            <textarea id="reason" name="reason" required></textarea>
                     
                             <label for="destination_hostel">Which Hostel You Want To Go: </label>
                             <select id="destination_hostel" name="destination_hostel" required>
@@ -138,6 +240,10 @@
                 ragging.classList.add("hidden");
                 leave.classList.add("hidden");
                 hostel.classList.add("hidden");
+                const expense = document.getElementById("monthlyExpense");
+                const collect = document.getElementById("collectFee");
+                expense.classList.add("hidden");
+                collect.classList.add("hidden");
             }
 
             function toggleRagging(){
@@ -149,6 +255,12 @@
                 complaint.classList.add("hidden");
                 leave.classList.add("hidden");
                 hostel.classList.add("hidden");
+        
+                const expense = document.getElementById("monthlyExpense");
+                const collect = document.getElementById("collectFee");
+
+                expense.classList.add("hidden");
+                collect.classList.add("hidden");
             }
 
             function toggleLeave(){
@@ -160,6 +272,11 @@
                 ragging.classList.add("hidden");
                 complaint.classList.add("hidden");
                 hostel.classList.add("hidden");
+
+                const expense = document.getElementById("monthlyExpense");
+                const collect = document.getElementById("collectFee");
+                expense.classList.add("hidden");
+                collect.classList.add("hidden");
             }
 
             function toggleHostel(){
@@ -171,8 +288,64 @@
                 ragging.classList.add("hidden");
                 complaint.classList.add("hidden");
                 leave.classList.add("hidden");
+                const expense = document.getElementById("monthlyExpense");
+                const collect = document.getElementById("collectFee");
+                expense.classList.add("hidden");
+                collect.classList.add("hidden");
             }
 
+
+            function togglePending(){
+                const expense = document.getElementById("monthlyExpense");
+                const collect = document.getElementById("collectFee");
+
+                expense.classList.add("hidden");
+                collect.classList.add("hidden");
+
+                document.getElementById("complaint").classList.add("hidden");
+                document.getElementById("ragging").classList.add("hidden");
+                document.getElementById("leave").classList.add("hidden");
+                document.getElementById("hostel").classList.add("hidden");
+            }
+
+            function toggleExpense(){
+                const expense = document.getElementById("monthlyExpense");
+                const collect = document.getElementById("collectFee");
+
+                expense.classList.remove("hidden");
+                collect.classList.add("hidden");
+
+                document.getElementById("complaint").classList.add("hidden");
+                document.getElementById("ragging").classList.add("hidden");
+                document.getElementById("leave").classList.add("hidden");
+                document.getElementById("hostel").classList.add("hidden");
+            }
+
+            function toggleDone(){
+                const expense = document.getElementById("monthlyExpense");
+                const collect = document.getElementById("collectFee");
+
+                expense.classList.add("hidden");
+                collect.classList.add("hidden");
+
+                document.getElementById("complaint").classList.add("hidden");
+                document.getElementById("ragging").classList.add("hidden");
+                document.getElementById("leave").classList.add("hidden");
+                document.getElementById("hostel").classList.add("hidden");
+            }
+
+            function toggleCollect(){
+                const expense = document.getElementById("monthlyExpense");
+                const collect = document.getElementById("collectFee");
+
+                collect.classList.remove("hidden");
+                expense.classList.add("hidden");
+
+                document.getElementById("complaint").classList.add("hidden");
+                document.getElementById("ragging").classList.add("hidden");
+                document.getElementById("leave").classList.add("hidden");
+                document.getElementById("hostel").classList.add("hidden");
+            }
         </script>
     </body>
     

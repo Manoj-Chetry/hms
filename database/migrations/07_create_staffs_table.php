@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('hostel_id')->nullable();     // For warden, caretaker, attender
         
             // Optional: Add foreign keys if needed
-            // $table->foreign('department_id')->references('id')->on('departments');
+            $table->foreign('department_id')->references('id')->on('departments');
             $table->foreign('hostel_id')->references('id')->on('hostels');
         });
     }

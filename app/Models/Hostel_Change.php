@@ -12,4 +12,14 @@ class Hostel_Change extends Model
     protected $fillable = [
         'student_id', 'destination_hostel_id', 'new_seat_id', 'status', 'created'
     ];
+
+
+    public function student() {
+        return $this->belongsTo(Student::class, 'student_id');
+    }
+
+    public function destinationHostel() {
+        return $this->belongsTo(Hostel::class, 'destination_hostel_id');
+    }
+   
 }

@@ -13,12 +13,13 @@
         <div class="dashboard-container">
             <!-- Sidebar -->
             <aside class="sidebar">
-                <h2>Caretaker</h2>
+                <h2>Caretaker: {{$hostel->name}}</h2>
                 <nav>
                     <a href="{{route('staff.caretaker.dashboard')}}">Home</a>
                     <a href="{{route("staff.caretaker.student_details")}}">Student Details</a>
                     <a href="{{route('staff.caretaker.room_details')}}">Room Details</a>
                     <a href="{{route('staff.caretaker.view.general_complaints')}}">General Complaints</a>
+                    {{-- <a href="{{route('staff.caretaker.view.ragging_complaints')}}">Ragging Complaints</a> --}}
                 </nav>
             </aside>
     

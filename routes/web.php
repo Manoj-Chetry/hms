@@ -2,19 +2,22 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AttenderController;
 use App\Http\Controllers\CaretakerController;
 use App\Http\Controllers\DswController;
+use App\Http\Controllers\HodController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\WardenController;
 use App\Http\Controllers\PasswordResetController;
+use App\Http\Controllers\MessController;
+use App\Http\Controllers\MessDuesController;
 use App\Models\Department;
 use App\Models\Role;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Hostel;
-
-
-
+use App\Models\Hostel_Change;
+use App\Models\Seat;
 use Illuminate\Support\Facades\Mail;
 
 Route::get('/test-email', function () {
@@ -70,6 +73,7 @@ Route::middleware(['session_expiry'])->group(function(){
     // 🧠 Admin Protected Routes
     Route::middleware('auth:admin')->group(function () {
         Route::get('/admin/dashboard', function () {
+            
             return view('admin.dashboard');
         })->name('admin.dashboard');
 
@@ -128,6 +132,19 @@ Route::middleware(['session_expiry'])->group(function(){
 
         // leave request
         Route::post("/student/apply_leave",[StudentController::class, 'applyLeave'])->name("student.applyLeave");
+        Route::get('/student/profile/edit/{id}', [StudentController::class, 'editProfile'])->name('student.profile.edit');
+    });
+
+    Route::middleware(['auth:student', 'messconveynor'])->group(function () {
+        Route::get('/student/mess/general_list', [MessController::class, 'generalFeeList'])->name('mess.general');
+        Route::get('/student/mess/pending', [MessController::class, 'pendingList'])->name('mess.pending');
+        Route::get('/student/mess/done', [MessController::class, 'doneList'])->name('mess.done');
+        Route::post('/student/mess/collect', [MessController::class, 'collectFee'])->name('mess.collect');
+        Route::post('/student/mess/expense', [MessController::class, 'messExpense'])->name('mess.expense');
+
+        Route::post('/mess-dues/calculate', [MessDuesController::class, 'calculate'])->name('mess_dues.calculate');
+
+
     });
 
     // Staff Login Handler
@@ -136,80 +153,107 @@ Route::middleware(['session_expiry'])->group(function(){
     Route::prefix('staff')->name('staff.')->group(function () {
 
         Route::middleware('auth:staff')->group(function () {
-            
-            // DSW Dashboard
-            Route::get('dsw/dashboard', function() {
-                $hostels = Hostel::all();
-                return view('staff.dsw_dashboard', compact('hostels'));
-            })->name('dsw.dashboard');
-            
-            // Warden Dashboard
-            Route::get('warden/dashboard', [WardenController::class, 'viewDashboard'])->name('warden.dashboard');
-            
-            // Caretaker Dashboard
-            Route::get('caretaker/dashboard', function() {
-                $caretaker = auth('staff')->user(); 
-                $hostel = Hostel::find($caretaker->hostel_id); 
-                $roles = Role::where('hostel_id', $caretaker->hostel_id)->get();
 
-                return view('staff.caretaker_dashboard', compact('hostel', 'roles'));
-            })->name('caretaker.dashboard');
-            
-            // Attender Dashboard
-            Route::get('attender/dashboard', function() {
-                $attender = auth()->user(); // Get the logged-in attender
-                $hostel = Hostel::find($attender->hostel_id); // Fetch the hostel associated with the attender
-                
-                return view('staff.attender_dashboard', compact('hostel'));
-            })->name('attender.dashboard');
-            
-            // HOD Dashboard
-            Route::get('hod/dashboard', function() {
-                $hod = auth()->user(); // Get the logged-in HOD
-                $hostel = Hostel::find($hod->hostel_id); // Fetch the hostel associated with the HOD (assuming HOD has hostel_id)
-                
-                return view('staff.hod_dashboard', compact('hostel'));
-            })->name('hod.dashboard');
-    
-    
+            // ⬇️ DSW-only routes
+            Route::middleware('staff.role:dsw')->group(function () {
+                Route::get('dsw/dashboard', [DswController::class, 'viewDashboard'])->name('dsw.dashboard');
+
+                Route::post('dsw/addHostel', [DswController::class, 'addHostel'])->name('dsw.addHostel');
+
+                Route::get('dsw/hostels/{id}', function ($id) {
+                    $hostel = Hostel::findOrFail($id);
+                    return view('staff.dsw._hostel_details', compact('hostel'));
+                });
+
+                Route::get('dsw/hostel/{name}', [DswController::class, 'viewHostel'])->name('dsw.hostel');
+
+                Route::post('dsw/hostelChange/forward/{id}',[DswController::class, 'hostelForward'])->name('dsw.hostel.forward');
+                Route::post('dsw/hostelChange/approve/{id}',[DswController::class, 'hostelApprove'])->name('dsw.hostel.approve');
+                Route::post('dsw/hostelChange/reject/{id}',[DswController::class, 'hostelReject'])->name('dsw.hostel.reject');
+            });
+
+            // ⬇️ Warden-only routes
+            Route::middleware('staff.role:warden')->group(function () {
+                Route::get('warden/dashboard', [WardenController::class, 'viewDashboard'])->name('warden.dashboard');
+                Route::get('/warden/student_details', [WardenController::class, 'studentDetails'])->name("warden.student_details");
+                Route::get('warden/student_search', [WardenController::class, 'studentSearch'])->name('students.index');
+                Route::post('warden/assign_role', [WardenController::class, 'assignRole'])->name('warden.assignRole');
+                Route::get('/warden/view_general_complaints', [WardenController::class,'viewGeneralComplaints'])->name('warden.view.general_complaints');
+                Route::post('/warden/complaint_resolve/{id}', [WardenController::class, 'resolveComplaint'])->name('warden.complaint.resolve');
+
+                Route::get('warden/leave_requests', [WardenController::class, 'leaveRequest'])->name('warden.leaves');
+
+                Route::post('warden/approve_leave/{id}',[WardenController::class, 'leaveApprove'])->name('warden.leave.approve');
+                Route::post('warden/reject_leave/{id}',[WardenController::class, 'leaveReject'])->name('warden.leave.reject');
+
+                Route::get('warden/hostelchange', function(){
+                    $user = auth('staff')->user();
+                    $hid = $user->hostel_id;
+                    $hostelChangeOut = Hostel_Change::where('status', 'pending')
+                        ->whereHas('student.hostel', function ($query) use ($hid) {
+                            $query->where('hostels.id', $hid);
+                        })
+                        ->get();
+                    $hostelChangeIn = Hostel_Change::where('status', 'forwarded:dsw')
+                        ->where('destination_hostel_id',$hid)
+                        ->get();
+
+                    $vacant = Seat::where('hostel_id', $hid)->where('occupied', false)->get();
+
+                    return view('staff.warden.hostelChange', compact('user','hostelChangeOut','hostelChangeIn', 'vacant'));
+                })->name('warden.hostel.change');
+
+                Route::post('warden/hostelChange/approve/{id}',[WardenController::class, 'hostelApprove'])->name('warden.hostel.approve');
+                Route::post('warden/hostelChange/reject/{id}',[WardenController::class, 'hostelReject'])->name('warden.hostel.reject');
+
+                Route::post('warden/hostelChangeIn/approve/{id}',[WardenController::class, 'hostelInApprove'])->name('warden.hostelIn.approve');
+
+            });
+
+            // ⬇️ Caretaker-only routes
+            Route::middleware('staff.role:caretaker')->group(function () {
+                Route::get('caretaker/dashboard', function() {
+                    $caretaker = auth('staff')->user(); 
+                    $hostel = Hostel::find($caretaker->hostel_id); 
+                    $roles = Role::where('hostel_id', $caretaker->hostel_id)->get();
+                    return view('staff.caretaker_dashboard', compact('hostel', 'roles'));
+                })->name('caretaker.dashboard');
+
+                Route::get('/caretaker/student_details', [CaretakerController::class, 'studentDetails'])->name("caretaker.student_details");
+                Route::get('/caretaker/room_details', [CaretakerController::class, 'roomDetails'])->name("caretaker.room_details");
+                Route::post('/caretaker/add_single_room', [CaretakerController::class, 'addSingleRoom'])->name('caretaker.add_single_room');
+                Route::post('/caretaker/add_multiple_room', [CaretakerController::class, 'addMultipleRoom'])->name('caretaker.add_multiple_room');
+                Route::get('/caretaker/view_general_complaints', [CaretakerController::class,'viewGeneralComplaints'])->name('caretaker.view.general_complaints');
+                Route::post('/caretaker/complaint_resolve/{id}', [CaretakerController::class, 'resolveComplaint'])->name('caretaker.complaint.resolve');
+            });
+
+            // ⬇️ Attender-only routes
+            Route::middleware('staff.role:attender')->group(function () {
+                Route::get('attender/dashboard', [AttenderController::class, 'outRecord'])->name('attender.dashboard');
+
+                Route::post('/attender/out_entry/{id}', [AttenderController::class, 'outEntry'])->name('attender.out.entry');
+                Route::post('/attender/in_entry/{id}', [AttenderController::class, 'inEntry'])->name('attender.in.entry');
+            });
+
+            // ⬇️ HOD-only routes
+            Route::middleware('staff.role:hod')->group(function () {
+                Route::get('hod/dashboard', function() {
+                    $hod = auth('staff')->user();
+                    $dept = Department::where('id', $hod->department_id)->first()->name;
+                    return view('staff.hod_dashboard', compact('hod','dept'));
+                })->name('hod.dashboard');
+
+                Route::get('hod/leave_requests', [HodController::class, 'leaveRequest'])->name('hod.leaves');
+
+                Route::post('hod/approve_leave/{id}',[HodController::class, 'leaveApprove'])->name('hod.leave.approve');
+                Route::post('hod/reject_leave/{id}',[HodController::class, 'leaveReject'])->name('hod.leave.reject');
+            });
+
+            // ⬇️ Logout route (common for all staff)
             Route::post('/staff/logout', function () {
                 Auth::guard('staff')->logout();
                 return redirect()->route('staff.login.form');
             })->name('logout');
-
-            Route::post('dsw/addHostel', [DswController::class, 'addHostel'])->name('dsw.addHostel');
-
-            Route::get('dsw/hostels/{id}', function ($id) {
-                $hostel = Hostel::findOrFail($id);
-                return view('staff.dsw._hostel_details', compact('hostel')); // updated path
-            });
-
-            // Student Details : caretaker
-            Route::get('/caretaker/student_details', [CaretakerController::class, 'studentDetails'])->name("caretaker.student_details");
-
-            // Room details : caretaker
-            Route::get('/caretaker/room_details', [CaretakerController::class, 'roomDetails'])->name("caretaker.room_details");
-
-            // Add rooms by caretaker : caretaker
-            Route::post('/caretaker/add_single_room', [CaretakerController::class, 'addSingleRoom'])->name('caretaker.add_single_room');
-            Route::post('/caretaker/add_multiple_room', [CaretakerController::class, 'addMultipleRoom'])->name('caretaker.add_multiple_room');
-
-            // View General Complaints : Caretaker
-            Route::get('/caretaker/view_general_complaints', [CaretakerController::class,'viewGeneralComplaints'])->name('caretaker.view.general_complaints');
-            // Resolve complaint
-            Route::post('/caretaker/complaint_resolve/{id}', [CaretakerController::class, 'resolveComplaint'])->name('caretaker.complaint.resolve');
-
-
-            // hostel view: dsw
-            Route::get('dsw/hostel/{name}', [DswController::class, 'viewHostel'])->name('dsw.hostel');
-
-
-            // Student Details : warden
-            Route::get('/warden/student_details', [WardenController::class, 'studentDetails'])->name("warden.student_details");
-            Route::get('warden/student_search', [WardenController::class, 'studentSearch'])->name('students.index');
-
-            // Role assign : warden
-            Route::post('warden/assign_role', [WardenController::class, 'assignRole'])->name('warden.assignRole');
         });
     });
 

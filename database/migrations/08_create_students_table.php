@@ -13,6 +13,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('roll_number', 8)->charset('utf8mb4')->collation('utf8mb4_unicode_ci')->unique();
             $table->string('department');
+            $table->unsignedBigInteger('department_id');
             $table->string('email')->unique();
             $table->string('phone');
             $table->string('seat');
@@ -22,6 +23,8 @@ return new class extends Migration
             $table->foreign('seat_id')
                 ->references('id')
                 ->on('seats');
+
+            $table->foreign('department_id')->references('id')->on('departments');
         });
     }
 

@@ -13,10 +13,9 @@
         <div class="dashboard-container">
             <!-- Sidebar -->
             <aside class="sidebar">
-                <h2>hod</h2>
+                <h2>HOD: {{$dept}}</h2>
                 <nav>
-                    
-                    <a href="#">Settings</a>
+                    <a href="{{route('staff.hod.leaves')}}">Leave Requests</a>
                 </nav>
             </aside>
     
@@ -24,7 +23,7 @@
             <main class="main">
                 <!-- Top Bar -->
                 <header class="topbar">
-                    <div class="greeting">Welcome, hod</div>
+                    <div class="greeting">Welcome, {{$hod->name}}</div>
                     <form action="{{route("staff.logout")}}" method="POST">
                         @csrf
                         <button type="submit" class="logout-btn">Logout</button>
@@ -33,8 +32,7 @@
     
                 <!-- Dashboard Content -->
                 <section class="content">
-                    <h1>Dashboard Overview</h1>
-                    <p>This is your hod dashboard.</p>
+                    
 
                     @if(session('success'))
                         <p style="color:green">{{ session('success') }}</p>

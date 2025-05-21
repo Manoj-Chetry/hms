@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mess Convenor Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f7fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #343a40;
+            color: #fff;
+            padding: 20px;
+        }
+
+        .sidebar h2 {
+            margin-bottom: 20px;
+            font-size: 22px;
+        }
+
+        .sidebar nav a {
+            display: block;
+            color: #fff;
+            text-decoration: none;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+
+        .sidebar nav a:hover {
+            text-decoration: underline;
+        }
+
+        .main {
+            flex-grow: 1;
+            padding: 20px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .logout-btn {
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .upload-form {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+            margin-bottom: 20px;
+        }
+
+        .upload-form h2 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                display: flex;
+                justify-content: space-around;
+            }
+
+            .sidebar nav {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+
+        .form-control {
+            padding: 10px;
+            width: 100%;
+            margin: 10px 0;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+
+        .submit-btn {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .submit-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .total-collected {
+            font-weight: bold;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <h2>Mess Convenor</h2>
+            <nav>
+                <a href="#" onclick="toggleSection('generalFeeList')">General Fee List</a> <!-- Updated link -->
+                <a href="#" onclick="toggleSection('pending')">Pending Dues</a>
+                <a href="#" onclick="toggleSection('expense')">Monthly Expense</a>
+                <a href="#" onclick="toggleSection('paymentDone')">Payment Done List</a>
+                <a href="#" onclick="toggleSection('collectFee')">Collect Fee</a> <!-- New button for collecting fee -->
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main">
+            <!-- Top Bar -->
+            <header class="topbar">
+                <div class="greeting">Welcome, Convenor</div>
+                <button class="logout-btn">Logout</button>
+            </header>
+
+            <section class="content">
+                <!-- General Fee List Section -->
+                <div id="generalFeeList" class="upload-form hidden"> <!-- Updated ID -->
+                    <h2>General Fee List</h2> <!-- Updated Title -->
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Roll No</th>
+                                <th>Room No</th>
+                                <th>Amount Paid</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Amit Kumar</td>
+                                <td>220345</td>
+                                <td>B102</td>
+                                <td>₹2200</td>
+                                <td>2025-05-10</td>
+                            </tr>
+                            <tr>
+                                <td>Riya Singh</td>
+                                <td>220111</td>
+                                <td>A305</td>
+                                <td>₹2000</td>
+                                <td>2025-05-09</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pending Dues Section -->
+                <div id="pending" class="upload-form hidden">
+                    <h2>Pending Mess Payments</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Roll No</th>
+                                <th>Room No</th>
+                                <th>Due Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Neha Sharma</td>
+                                <td>220567</td>
+                                <td>A214</td>
+                                <td>₹2200</td>
+                            </tr>
+                            <tr>
+                                <td>Raj Verma</td>
+                                <td>220898</td>
+                                <td>B101</td>
+                                <td>₹2000</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Monthly Expense Section -->
+                <div id="expense" class="upload-form hidden">
+                    <h2>Enter Monthly Mess Expense</h2>
+                    <form onsubmit="calculateFeeCollectionPeriod(event)">
+                        <label for="totalExpense">Total Monthly Expense (₹):</label>
+                        <input type="number" id="totalExpense" class="form-control" required>
+
+                        <label for="startDuration">Start Duration of Fee Collection:</label>
+                        <input type="date" id="startDuration" class="form-control" required>
+
+                        <label for="endDuration">End Duration of Fee Collection:</label>
+                        <input type="date" id="endDuration" class="form-control" required>
+
+                        <button type="submit" class="submit-btn">Calculate Fee Collection Period</button>
+                    </form>
+                    <p id="result" style="margin-top:15px;font-weight:bold;"></p>
+                </div>
+
+                <!-- Payment Done List Section -->
+                <div id="paymentDone" class="upload-form hidden">
+                    <h2>Payment Done List</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Roll No</th>
+                                <th>Room No</th>
+                                <th>Amount Paid</th>
+                                <th>Payment Date</th>
+                                <th>Payment Reference ID</th> <!-- New column for Payment Reference ID -->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Amit Kumar</td>
+                                <td>220345</td>
+                                <td>B102</td>
+                                <td>₹2200</td>
+                                <td>2025-05-10</td>
+                                <td>REF123456</td>
+                            </tr>
+                            <tr>
+                                <td>Riya Singh</td>
+                                <td>220111</td>
+                                <td>A305</td>
+                                <td>₹2000</td>
+                                <td>2025-05-09</td>
+                                <td>REF123457</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Collect Fee Section -->
+                <div id="collectFee" class="upload-form hidden">
+                    <h2>Collect Mess Fee</h2>
+                    <form id="collectFeeForm" onsubmit="addFeeCollection(event)">
+                        <label for="paymentReferenceId">Payment Reference ID:</label>
+                        <input type="text" id="paymentReferenceId" class="form-control" required>
+
+                        <label for="studentName">Student Name:</label>
+                        <input type="text" id="studentName" class="form-control" required>
+
+                        <label for="rollNo">Roll Number:</label>
+                        <input type="text" id="rollNo" class="form-control" required>
+
+                        <label for="roomNo">Room Number:</label>
+                        <input type="text" id="roomNo" class="form-control" required>
+
+                        <label for="amountPaid">Amount Paid (₹):</label>
+                        <input type="number" id="amountPaid" class="form-control" required>
+
+                        <button type="submit" class="submit-btn">Submit Payment</button>
+                    </form>
+                    <div id="totalCollected" class="total-collected">Total Collected: ₹0</div>
+                </div>
+
+            </section>
+        </main>
+    </div>
+
+    <script>
+        function toggleSection(sectionId) {
+            const sections = ['generalFeeList', 'pending', 'expense', 'paymentDone', 'collectFee']; // Updated section name
+            sections.forEach(id => document.getElementById(id).classList.add('hidden'));
+            document.getElementById(sectionId).classList.remove('hidden');
+        }
+
+        let totalAmountCollected = 0;
+
+        function addFeeCollection(event) {
+            event.preventDefault();
+
+            const paymentReferenceId = document.getElementById('paymentReferenceId').value;
+            const studentName = document.getElementById('studentName').value;
+            const rollNo = document.getElementById('rollNo').value;
+            const roomNo = document.getElementById('roomNo').value;
+            const amountPaid = parseFloat(document.getElementById('amountPaid').value);
+
+            if (!paymentReferenceId || !studentName || !rollNo || !roomNo || isNaN(amountPaid) || amountPaid <= 0) {
+                alert('Please fill all the fields correctly.');
+                return;
+            }
+
+            // Update total collected
+            totalAmountCollected += amountPaid;
+            document.getElementById('totalCollected').textContent = `Total Collected: ₹${totalAmountCollected.toFixed(2)}`;
+
+            // Optionally, clear the form for the next entry
+            document.getElementById('collectFeeForm').reset();
+        }
+
+        function calculateFeeCollectionPeriod(event) {
+            event.preventDefault();
+
+            const totalExpense = parseFloat(document.getElementById('totalExpense').value);
+            const startDuration = new Date(document.getElementById('startDuration').value);
+            const endDuration = new Date(document.getElementById('endDuration').value);
+
+            if (isNaN(totalExpense) || startDuration > endDuration) {
+                document.getElementById('result').textContent = "Please enter valid data.";
+                return;
+            }
+
+            // Calculate the number of days between start and end date
+            const timeDifference = endDuration.getTime() - startDuration.getTime();
+            const numberOfDays = timeDifference / (1000 * 3600 * 24) + 1; // +1 to include the start date
+
+            // Calculate the daily fee based on total expense and number of days
+            const dailyFee = (totalExpense / numberOfDays).toFixed(2);
+
+            document.getElementById('result').textContent = `Each day costs: ₹${dailyFee} per student`;
+        }
+    </script>
+</body>
+</html>

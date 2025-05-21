@@ -177,7 +177,12 @@
 
             <div id="departmentField" style="display: none;">
                 <label for="department_id">Department ID:</label>
-                <input type="number" name="department_id" id="department_id">
+                <select type="number" name="department_id" id="department_id" required>
+                    <option value="Null" disabled selected>Select Department</option>
+                    @foreach ($departments as $d)
+                        <option value="{{$d->id}}">{{$d->name}}</option>
+                    @endforeach
+                </select>
             </div>
     
             <div id="hostelField" style="display: none;">
@@ -213,13 +218,14 @@
         @foreach($staffs as $staff)
             @php
                 $hostelName = $hostels->firstWhere('id', $staff->hostel_id)->name ?? 'N/A';
+                $deptName = $departments->firstWhere('id', $staff->department_id)->name ?? 'N/A';
             @endphp
             <tr>
                 <td>{{ $staff->id }}</td>
                 <td>{{ $staff->name }}</td>
                 <td>{{ $staff->email }}</td>
                 <td>{{ $staff->role }}</td>
-                <td>{{ $staff->department_id ?? 'N/A' }}</td>
+                <td>{{ $deptName }}</td>
                 <td>{{ $hostelName }}</td>
                 <td class="action-buttons">
                     <button class="edit-btn" type="button" onclick="openEditModal()">Edit</button>

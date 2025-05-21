@@ -17,6 +17,7 @@
                     
                     <a href="#" onclick="openEditModal()">Add Hostel</a>
                     <a href="#" onclick="toggleView()">Hostel Info</a>
+                    <a href="#" onclick="toggleChange()">Hostel Change Request</a>
                 </nav>
             </aside>
     
@@ -68,6 +69,56 @@
     
                 </section>
 
+                <div class="table-container" id="hos">
+                    <h2>Hostel Change Requests</h2>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Roll Number</th>
+                                    <th>Current Hostel</th>
+                                    <th>Requested Hostel</th>
+                                    <th>Status</th>
+                                    <th>New Seat</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if ($hostelChange->isEmpty())
+                                    <tr><td colspan="100%" style="text-align: center"><h4>---- No Hostel Change Requests ----</h4></td></tr>
+                                @else
+                                    @foreach ($hostelChange as $i=>$l)
+                                        <tr>
+                                            <td>{{$l->student->roll_number}}</td>
+                                            <td>{{$l->student->hostel->name}}</td>
+                                            <td>{{$l->destinationHostel->name}}</td>
+                                            <td>{{$l->status}}</td>
+                                            <td>@if($l->new_seat_id){{$l->new_seat_id}}@else{{'N/A'}}@endif</td>
+                                            <td>
+                                                @if($l->new_seat_id!=Null)
+                                                    <form action="{{route('staff.dsw.hostel.approve', $l->id)}}" method="post">
+                                                        @csrf
+                                                        <button type="submit" class="action-btn approve">Approve</button>
+                                                    </form>
+                                                @else
+                                                    <form action="{{route('staff.dsw.hostel.forward', $l->id)}}" method="post">
+                                                        @csrf
+                                                        <button type="submit" class="action-btn approve">Forward</button>
+                                                    </form>
+                                                @endif
+
+                                                <form action="{{route('staff.dsw.hostel.reject', $l->id)}}" method="post">
+                                                    @csrf
+                                                    <button type="submit" class="action-btn reject">Reject</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                @endif
+                                
+                            </tbody>
+                        </table>
+                </div>
+
                 <div id="editModal" style="display: none;">
                     <div class="modal-content">
                         <h3>Add Hostel</h3>
@@ -117,6 +168,11 @@
             function toggleView(){
                 const form = document.getElementById("view-hostel");
                 form.classList.toggle("hidden");
+            }
+
+            function toggleChange(){
+                const h = document.getElementById('hos');
+                h.classList.toggle('hidden');
             }
 
         </script>

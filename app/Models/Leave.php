@@ -15,6 +15,7 @@ class Leave extends Model
         'reason',
         'deperature_time',
         'arrival_time',
-        'status'
+        'status',
+        'done'
     ];
 }

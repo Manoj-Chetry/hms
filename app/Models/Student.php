@@ -15,6 +15,7 @@ class Student extends Authenticatable
         'name',
         'roll_number',
         'department',
+        'department_id',
         'email',
         'phone',
         'seat_id',
@@ -24,15 +25,26 @@ class Student extends Authenticatable
 
     public $timestamps = false;
 
-    // Relationships
-    // public function department()
-    // {
-    //     return $this->belongsTo(Department::class);
-    // }
-
     public function seat()
     {
         return $this->belongsTo(Seat::class, 'seat_id');
+    }
+
+    public function hostel()
+    {
+        return $this->hasOneThrough(
+            Hostel::class,
+            Seat::class,
+            'id',         // Foreign key on Seat table...
+            'id',         // Foreign key on Hostel table...
+            'seat_id',    // Local key on Student table...
+            'hostel_id'   // Local key on Seat table...
+        );
+    }
+
+    public function outrecords()
+    {
+        return $this->hasMany(OutRecord::class, 'student_id');
     }
 }
 
